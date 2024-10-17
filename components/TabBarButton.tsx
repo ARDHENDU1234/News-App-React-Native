@@ -16,23 +16,23 @@ const TabBarButton = ({
   routeName,
   label,
 }: {
-  onPress: Function;
-  onLongPress: Function;
+  onPress: () => void;
+  onLongPress: () => void;
   isFocused: boolean;
   routeName: string;
   label: string;
 }) => {
-  const opacity = useSharedValue(0);
+  const opacity = useSharedValue(isFocused ? 1 : 0);
 
   useEffect(() => {
-    opacity.value = withSpring(
-      typeof isFocused === "boolean" ? (isFocused ? 1 : 0) : isFocused,
-      { duration: 50 }
-    );
-  }, [opacity, isFocused]);
+    opacity.value = withSpring(isFocused ? 1 : 0, {
+      stiffness: 150,
+      damping: 12,
+    });
+  }, [isFocused]);
 
   const animatedTextStyle = useAnimatedStyle(() => {
-    const opacityValue = interpolate(opacity.value, [0, 1], [1, 0]);
+    const opacityValue = interpolate(opacity.value, [0, 1], [0, 1]);
 
     return {
       opacity: opacityValue,
@@ -41,8 +41,8 @@ const TabBarButton = ({
 
   return (
     <Pressable
-      onPress={onPress}
-      onLongPress={onLongPress}
+      onPress={() => onPress()}
+      onLongPress={() => onLongPress()}
       style={styles.tabbarBtn}
     >
       {icon[routeName]({
