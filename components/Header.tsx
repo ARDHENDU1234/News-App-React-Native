@@ -36,9 +36,9 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
+    marginBottom: 20
   },
   userImg: {
-    width: 50,
     height: 50,
     borderRadius: 30, 
   },
@@ -54,6 +54,6 @@ const styles = StyleSheet.create({
   userName: {
     fontSize: 14,
     fontWeight:'700',
-    
+    color: Colors.black,
   }
 });
