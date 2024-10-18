@@ -1,9 +1,9 @@
 import { View, StyleSheet, LayoutChangeEvent } from "react-native";
 import { BottomTabBarProps } from "@react-navigation/bottom-tabs";
-import TabBarButton from "@/components/TabBarButton";
+import TabBarButton from "../components/TabBarButton"; // Adjusted path
 import Animated, { useAnimatedStyle, useSharedValue, withTiming } from "react-native-reanimated";
 import { useState } from "react";
-import { Colors } from "@/constants/Colors";
+import { Colors } from "../constants/Colors"; // Adjusted path
 
 export function TabBar({ state, descriptors, navigation }: BottomTabBarProps) {
   const [dimensions, setDimensions] = useState({ height: 20, width: 100 });
@@ -38,7 +38,7 @@ export function TabBar({ state, descriptors, navigation }: BottomTabBarProps) {
             top: 52,
             left: 34,
             height: 8,
-            width: 40,
+            width: buttonWidth - 10, // Adjusted width dynamically
           },
         ]}
       />

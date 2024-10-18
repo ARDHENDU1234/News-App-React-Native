@@ -1,13 +1,13 @@
 import { Pressable, StyleSheet } from "react-native";
 import React, { useEffect } from "react";
-import { icon } from "@/constants/Icons";
+import { icon } from "../constants/Icons"; // Adjusted path
 import Animated, {
   interpolate,
   useAnimatedStyle,
   useSharedValue,
   withSpring,
 } from "react-native-reanimated";
-import { Colors } from "@/constants/Colors";
+import { Colors } from "../constants/Colors"; // Adjusted path
 
 const TabBarButton = ({
   onPress,
@@ -33,7 +33,6 @@ const TabBarButton = ({
 
   const animatedTextStyle = useAnimatedStyle(() => {
     const opacityValue = interpolate(opacity.value, [0, 1], [0, 1]);
-
     return {
       opacity: opacityValue,
     };
@@ -41,8 +40,8 @@ const TabBarButton = ({
 
   return (
     <Pressable
-      onPress={() => onPress()}
-      onLongPress={() => onLongPress()}
+      onPress={onPress}
+      onLongPress={onLongPress}
       style={styles.tabbarBtn}
     >
       {icon[routeName]({
