@@ -1,9 +1,9 @@
 import { View, StyleSheet, LayoutChangeEvent } from "react-native";
 import { BottomTabBarProps } from "@react-navigation/bottom-tabs";
-import TabBarButton from "../components/TabBarButton"; // Adjusted path
+import TabBarButton from "../components/TabBarButton"; // Ensure this path is correct
 import Animated, { useAnimatedStyle, useSharedValue, withTiming } from "react-native-reanimated";
 import { useState } from "react";
-import { Colors } from "../constants/Colors"; // Adjusted path
+import { Colors } from "../constants/Colors"; // Ensure this path is correct
 
 export function TabBar({ state, descriptors, navigation }: BottomTabBarProps) {
   const [dimensions, setDimensions] = useState({ height: 20, width: 100 });

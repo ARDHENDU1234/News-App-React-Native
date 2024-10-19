@@ -1,6 +1,6 @@
-import React from 'react'
-import { Tabs } from 'expo-router'
-import { TabBar } from '@/components/TabBar'
+import React from 'react';
+import { Tabs } from 'expo-router';
+import { TabBar } from '@/components/TabBar'; // Ensure this path is correct
 
 const TabLayout = () => {
   return (
@@ -30,7 +30,7 @@ const TabLayout = () => {
         }}
       />
     </Tabs>
-  )
+  );
 }
 
-export default TabLayout
+export default TabLayout;

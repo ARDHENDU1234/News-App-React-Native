@@ -1,24 +1,24 @@
 import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import React from 'react';
 import { Ionicons } from '@expo/vector-icons'; 
-import { Colors } from "@/constants/Colors";
+import { Colors } from "@/constants/Colors"; // Ensure this path is correct
 
 type Props = {}
 
 const Header = (props: Props) => {
   return (
     <View style={styles.container}>
-        <View style={styles.userInfo}>
+      <View style={styles.userInfo}>
         {/* Display user image */}
         <Image 
-            source={{ uri: 'https://xsgames.co/randomusers/avatar.php?g=male' }} 
-            style={styles.userImg} 
+          source={{ uri: 'https://xsgames.co/randomusers/avatar.php?g=male' }} 
+          style={styles.userImg} 
         />
-        <View style={{gap: 3}}>
-            <Text style={styles.welcomeTxt}>Welcome</Text>
-            <Text style={styles.userName}>John Doe!</Text>
+        <View style={{ gap: 3 }}>
+          <Text style={styles.welcomeTxt}>Welcome</Text>
+          <Text style={styles.userName}>John Doe!</Text>
         </View>
-    </View>
+      </View>
 
       {/* Notification button with TouchableOpacity */}
       <TouchableOpacity onPress={() => {}}>
@@ -36,7 +36,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginBottom: 20
+    marginBottom: 20,
   },
   userImg: {
     height: 50,
@@ -49,11 +49,11 @@ const styles = StyleSheet.create({
   },
   welcomeTxt: {
     fontSize: 12,
-    color: Colors.darkGrey
+    color: Colors.darkGrey,
   },
   userName: {
     fontSize: 14,
-    fontWeight:'700',
+    fontWeight: '700',
     color: Colors.black,
-  }
+  },
 });
