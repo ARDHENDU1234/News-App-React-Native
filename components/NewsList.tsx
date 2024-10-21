@@ -1,8 +1,9 @@
-import { StyleSheet, Text, View, Image } from 'react-native';
+import { StyleSheet, Text, View, Image, TouchableOpacity } from 'react-native';
 import React from 'react';
 import { NewsDataType } from '@/types';
 import { Colors } from '@/constants/Colors';
 import Loading from './Loading'; // Make sure to import the Loading component
+import { Link } from 'expo-router';
 
 type Props = {
   newsList: Array<NewsDataType>;
@@ -15,7 +16,9 @@ const NewsList = ({ newsList }: Props) => {
         <Loading size={'large'} />
       ) : (
         newsList.map((item, index) => (
-          <View key={index} style={styles.itemContainer}>
+          <Link href={`/news/${item.article_id}`} asChild key={index}>
+            <TouchableOpacity>         
+          <View style={styles.itemContainer}>
             <Image source={{ uri: item.image_url }} style={styles.itemImg} />
             <View style={styles.itemInfo}>
               <Text style={styles.itemCategory}>{item.category}</Text>
@@ -29,6 +32,8 @@ const NewsList = ({ newsList }: Props) => {
               </View>
             </View>
           </View>
+          </TouchableOpacity> 
+          </Link>  
         ))
       )}
     </View>
