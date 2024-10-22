@@ -1,6 +1,10 @@
 import { StyleSheet, Text, View } from 'react-native'
-import React from 'react'
-import { useLocalSearchParams } from 'expo-router'
+import React, { useEffect } from 'react'
+import { Link, router, Stack, useLocalSearchParams } from 'expo-router'
+import { FlatList, TouchableOpacity } from 'react-native-gesture-handler'
+import { Ionicons } from '@expo/vector-icons'
+import Loading from '@/components/Loading'
+import { NewsItem } from '@/components/NewsList'
 
 type Props = {}
 
@@ -14,6 +18,10 @@ const Page = (props: Props) => {
     const [news, setNews] = useState<NewsDataType[]>([]);
     const [isLoading, setIsLoading] = useState(true);  
 
+    useEffect(() => {
+      getNews();
+    }, []);
+
     const getNews = async (category: string = '') => {
         try {
             let categoryString = '';
@@ -23,13 +31,13 @@ const Page = (props: Props) => {
                 categoryString = `&category=${category}`;
             }
             if (country) {
-                countryString = `&country=${category}`;
+                countryString = `&country=${country}`;
             }      
-            if (country) {
-                countryString = `&country=${category}`;
+            if (query) {
+              queryString = `&query=${query}`;
             }                
 
-            const URL = `https://newsdata.io/api/1/news?apikey=${process.env.EXPO_PUBLIC_API_KEY}&language=en&image=1&removeduplicate=1&size=10${categoryString}`;
+            const URL = `https://newsdata.io/api/1/news?apikey=${process.env.EXPO_PUBLIC_API_KEY}&language=en&image=1&removeduplicate=1&size=10${categoryString}${countryString}${queryString}`;
             const response = await axios.get(URL);
 
             if (response && response.data) {
@@ -41,15 +49,41 @@ const Page = (props: Props) => {
         }
     };
 
-  return (
-    <View>
-      <Text>Search Query: {query}</Text>
-      <Text>Category: {category}</Text>
-      <Text>Country: {country}</Text>
-    </View>
-  )
+    return (
+      <>
+      <Stack.Screen
+        options={{
+          headerLeft: () => (
+            <TouchableOpacity onPress={() => router.back()}>
+              <Ionicons name="arrow-back" size={24} />
+            </TouchableOpacity>
+          ),
+          title: "Search"
+        }} />
+        <View style={styles.container}>
+          {isLoading ? (
+            <Loading size={'large'} />
+          ) : (
+            <FlatList data={news} keyExtractor={(_, index) => `list_item${index}`} showsVerticalScrollIndicator={false} renderItem={(index, item) => {
+              return <Link href={`/news/${item.article_id}`} asChild key={index}>
+              <TouchableOpacity>         
+                <NewsItem item={item}/>
+              </TouchableOpacity> 
+            </Link>  
+            }} 
+            />
+          )}
+        </View>
+      </>
+    );    
 }
 
 export default Page
 
-const styles = StyleSheet.create({})
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    marginHorizontal: 20,
+    marginVertical: 20
+  }
+})
