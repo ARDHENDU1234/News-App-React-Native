@@ -2,11 +2,9 @@ import { StyleSheet, Text, TouchableOpacity, View, Image } from 'react-native';
 import React, { useEffect, useState } from 'react';
 import { router, Stack, useLocalSearchParams } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
-import { NewsDataType } from '@/types';
 import axios from 'axios';
-import Loading from '@/components/Loading';
+import Loading from '../components/Loading'; // Updated to relative path
 import { ScrollView } from 'react-native-gesture-handler';
-import { Moment } from 'moment';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Colors } from 'react-native/Libraries/NewAppScreen';
 
@@ -14,7 +12,7 @@ type Props = {};
 
 const NewsDetails = (props: Props) => {
   const { id } = useLocalSearchParams<{ id: string }>();
-  const [news, setNews] = useState<NewsDataType[]>([]);
+  const [news, setNews] = useState<any[]>([]); // Updated to any[] for flexibility
   const [isLoading, setIsLoading] = useState(true);
   const [bookmark, setBookmark] = useState(false);
 
@@ -24,7 +22,7 @@ const NewsDetails = (props: Props) => {
 
   useEffect(() => {
     if (!isLoading) {
-      renderBookmark(news[0].article_id);
+      renderBookmark(news[0]?.article_id); // Added optional chaining
     }
   }, [isLoading]);
 
@@ -65,13 +63,10 @@ const NewsDetails = (props: Props) => {
   };
 
   const renderBookmark = async (newsId: string) => {
-    await AsyncStorage.getItem('bookmark').then((token) => {
-      const res = JSON.parse(token);
-      if (res != null) {
-        let data = res.find((value: string) => value === newsId);
-        return data == null ? setBookmark(false) : setBookmark(true);
-      }
-    });
+    const storedBookmarks = await AsyncStorage.getItem('bookmark');
+    const res = storedBookmarks ? JSON.parse(storedBookmarks) : [];
+    const data = res.includes(newsId);
+    setBookmark(data);
   };
 
   return (
@@ -115,11 +110,9 @@ const NewsDetails = (props: Props) => {
                 <Text style={styles.newsInfo}>{news[0].source_name}</Text>
               </View>
               <Image source={{ uri: news[0].image_url }} style={styles.newsImg} />
-              {news[0].content ? (
-                <Text style={styles.newsContent}>{news[0].content}</Text>
-              ) : (
-                <Text style={styles.newsContent}>{news[0].description}</Text>
-              )}
+              <Text style={styles.newsContent}>
+                {news[0].content || news[0].description}
+              </Text>
             </>
           )}
         </ScrollView>

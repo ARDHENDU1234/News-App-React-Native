@@ -1,56 +1,57 @@
-import { StyleSheet, Text, TouchableOpacity, View } from 'react-native'
-import React, { useRef, useState } from 'react'
-import { Colors } from '@/constants/Colors'
-import { ScrollView } from 'react-native-gesture-handler'
-import newsCategoryList from '@/constants/Categories'
+import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import React, { useRef, useState } from 'react';
+import { Colors } from '@/constants/Colors';
+import { ScrollView } from 'react-native-gesture-handler';
+import newsCategoryList from '@/constants/Categories';
 
 type Props = {
     onCategoryChanged: (category: string) => void;  
 };
 
-const Categories = ({onCategoryChanged}: Props) => {
-  const scrollRef = useRef<ScrollView>(null);  
-  const itemRef = useRef<TouchableOpacity[] | null[]>([]);  
-  const [activeIndex, setActiveIndex] = useState(null);  
-    
-  const handleSelectCatagory = (index: number) => {
-    const selected = itemRef.current[index];
-    setActiveIndex(index);
+const Categories = ({ onCategoryChanged }: Props) => {
+    const scrollRef = useRef<ScrollView>(null);
+    const itemRefs = useRef<(TouchableOpacity | null)[]>([]);
+    const [activeIndex, setActiveIndex] = useState<number | null>(null);
 
-    selected?.measure((x) => {
-        scrollRef.current?.scrollTo({x: x-20, y: 0, animated: true});
-    });
+    const handleSelectCategory = (index: number) => {
+        setActiveIndex(index);
 
-    onCategoryChanged(newsCategoryList[index].slug);
-  }
+        itemRefs.current[index]?.measure((x) => {
+            scrollRef.current?.scrollTo({ x: x - 20, y: 0, animated: true });
+        });
 
-  return (
-    <View>
-      <Text style={styles.title}>Trending Right Now</Text>
-      <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.itemsWrapper}>
-        {newsCategoryList.map((item, index) => (
-            <TouchableOpacity 
-                ref={(el) => (itemRef.current[index] = el)} 
-                key={index} 
-                style={[styles.item, activeIndex === index && styles.itemActive]}
-                onPress={() => handleSelectCatagory(index)}
+        onCategoryChanged(newsCategoryList[index].slug);
+    };
+
+    return (
+        <View>
+            <Text style={styles.title}>Trending Right Now</Text>
+            <ScrollView 
+                horizontal 
+                showsHorizontalScrollIndicator={false} 
+                contentContainerStyle={styles.itemsWrapper} 
+                ref={scrollRef}
             >
-                <Text 
-                style={[
-                    styles.itemText, 
-                    activeIndex === index && styles.itemTextActive,
-                    ]}
+                {newsCategoryList.map((item, index) => (
+                    <TouchableOpacity 
+                        ref={(el) => (itemRefs.current[index] = el)} 
+                        key={item.slug} // Use slug as key for better performance
+                        style={[styles.item, activeIndex === index && styles.itemActive]}
+                        onPress={() => handleSelectCategory(index)}
                     >
-                        {item.title}
-                </Text>
-            </TouchableOpacity>
-        ))}
-      </ScrollView>
-    </View>
-  )
-}
+                        <Text 
+                            style={[styles.itemText, activeIndex === index && styles.itemTextActive]}
+                        >
+                            {item.title}
+                        </Text>
+                    </TouchableOpacity>
+                ))}
+            </ScrollView>
+        </View>
+    );
+};
 
-export default Categories
+export default Categories;
 
 const styles = StyleSheet.create({
     title: {
@@ -64,7 +65,7 @@ const styles = StyleSheet.create({
         gap: 20,
         paddingVertical: 10,
         paddingHorizontal: 20,
-        marginBottom: 10 
+        marginBottom: 10,
     },
     item: {
         borderWidth: 1,
@@ -84,6 +85,6 @@ const styles = StyleSheet.create({
     },
     itemTextActive: {
         fontWeight: '600',
-        color: Colors.white
-    }  
-})
+        color: Colors.white,
+    },
+});

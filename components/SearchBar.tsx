@@ -4,13 +4,13 @@ import { Ionicons } from '@expo/vector-icons';
 import { Colors } from '../constants/Colors'; // Adjusted path for Colors
 
 type Props = {
-  withHorizontalPadding: boolean
-  setSearchQuery: Fuction
+  withHorizontalPadding: boolean;
+  setSearchQuery: (query: string) => void; // Corrected type for the function
 };
 
-const SearchBar = ({withHorizontalPadding, setSearchQuery}: Props) => {
+const SearchBar = ({ withHorizontalPadding, setSearchQuery }: Props) => {
   return (
-    <View style={[styles.container, withHorizontalPadding && {paddingHorizontal: 20}]}>
+    <View style={[styles.container, withHorizontalPadding && { paddingHorizontal: 20 }]}>
       <View style={styles.searchBar}>
         <Ionicons name="search-outline" size={20} color={Colors.lightGrey} />
         <TextInput
@@ -18,7 +18,7 @@ const SearchBar = ({withHorizontalPadding, setSearchQuery}: Props) => {
           placeholderTextColor={Colors.lightGrey}
           style={styles.searchTxt}
           autoCapitalize="none"
-          onChangeText={query => setSearchQuery(query)}
+          onChangeText={setSearchQuery} // Simplified function call
         />
       </View>
     </View>
@@ -29,7 +29,6 @@ export default SearchBar;
 
 const styles = StyleSheet.create({
   container: {
-    // marginHorizontal: 20,
     marginBottom: 20,
   },
   searchBar: {

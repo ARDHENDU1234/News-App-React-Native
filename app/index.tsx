@@ -17,9 +17,9 @@ const Page = () => {
     <View style={styles.container}>
       <StatusBar style="light" />
       <ImageBackground 
-        source={require('@/assets/images/getting-started.jpg')} 
-        style={{ flex: 1 }} 
-        resizeMode="cover"
+          source={require('./assets/images/getting-started.jpg')} // Adjust the path accordingly
+          style={styles.backgroundImage} 
+          resizeMode="cover"
       >
         <View style={styles.wrapper}>
           {/* Animated title using Animated.Text */}
@@ -44,7 +44,7 @@ const Page = () => {
               <Text style={styles.btnText}>Get Started</Text>
             </TouchableOpacity>
           </Animated.View>
-        </View>        
+        </View>
       </ImageBackground>
     </View>
   );
@@ -56,6 +56,9 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
+  backgroundImage: {
+    flex: 1, // Use a style for the background image
+  },
   wrapper: {
     flex: 1,
     justifyContent: 'flex-end',
@@ -65,7 +68,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(0, 0, 0, 0.5)', // Transparent black overlay
   },
   title: {
-    color: Colors.white, // Use white from Colors object
+    color: Colors.white,
     fontSize: 24,
     fontWeight: '600',
     letterSpacing: 1.5,
@@ -73,7 +76,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   description: {
-    color: Colors.white, // Use white from Colors object
+    color: Colors.white,
     fontSize: 16,
     fontWeight: '500',
     letterSpacing: 1.2,
@@ -81,15 +84,15 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   btn: {
-    backgroundColor: Colors.tint, // Use tint color for button background
+    backgroundColor: Colors.tint,
     paddingVertical: 15,
     marginVertical: 20,
     alignItems: 'center',
-    borderRadius: 10, // Rounded corners
+    borderRadius: 10,
   },
   btnText: {
-    color: Colors.white, // Use white color for button text
+    color: Colors.white,
     fontSize: 16,
-    fontWeight: '700', // Bold text for button
+    fontWeight: '700',
   },
 });

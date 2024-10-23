@@ -8,16 +8,16 @@ import { useNewsCategories } from '@/hooks/useNewsCategories';
 import { useNewsCountries } from '@/hooks/useNewsCountries';
 import { Link } from '@react-navigation/native';
 
-type Props = {}
+type Props = {};
 
 const Page = (props: Props) => {
   const { top: safeTop } = useSafeAreaInsets();
 
   const { newsCategories, toggleNewsCategory } = useNewsCategories();
   const { newsCountries, toggleNewsCountry } = useNewsCountries();
-  const [searchQuery, setSearchQuery] = useState("");
-  const [selectedCategory, setSelectedCategory] = useState("");
-  const [selectedCountry, setSelectedCountry] = useState("");
+  const [searchQuery, setSearchQuery] = useState('');
+  const [selectedCategory, setSelectedCategory] = useState('');
+  const [selectedCountry, setSelectedCountry] = useState('');
 
   return (
     <View style={[styles.container, { paddingTop: safeTop + 20 }]}>
@@ -30,12 +30,12 @@ const Page = (props: Props) => {
       <View style={styles.listContainer}>
         {newsCategories.map((item) => (
           <CheckBox 
-            key={item.id} // Use item.id as the key
+            key={item.id} 
             label={item.title} 
             checked={item.selected} 
             onPress={() => {
-              toggleNewsCategory(item.id); // Toggle based on item.id
-              setSelectedCategory(item.slug); // Bind selected category by slug
+              toggleNewsCategory(item.id); 
+              setSelectedCategory(item.slug);
             }} 
           />
         ))}
@@ -43,14 +43,14 @@ const Page = (props: Props) => {
 
       <Text style={styles.title}>Country</Text>
       <View style={styles.listContainer}>
-        {newsCountries.map((item, index) => ( 
+        {newsCountries.map((item) => ( 
           <CheckBox 
-            key={index} // Use index as the key
+            key={item.code} 
             label={item.name} 
             checked={item.selected} 
             onPress={() => {
-              toggleNewsCountry(index); // Toggle based on index
-              setSelectedCountry(item.code); // Bind selected country by code
+              toggleNewsCountry(item.code); 
+              setSelectedCountry(item.code); 
             }} 
           />
         ))}      
@@ -58,16 +58,16 @@ const Page = (props: Props) => {
 
       <Link
         to={{
-          pathname: `/news/search`,
-          params: { query: searchQuery, category, country },
+          pathname: '/news/search',
+          params: { query: searchQuery, category: selectedCategory, country: selectedCountry },
         }} asChild>
         <TouchableOpacity style={styles.searchBtn}>
           <Text style={styles.searchBtnTxt}>Search</Text>
         </TouchableOpacity>
       </Link>
     </View>
-  )
-}
+  );
+};
 
 export default Page;
 
@@ -78,7 +78,7 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 18,
-    fontWeight: "600",
+    fontWeight: '600',
     color: Colors.black,
     marginBottom: 10, 
   },
@@ -99,6 +99,6 @@ const styles = StyleSheet.create({
   searchBtnTxt: {
     color: Colors.white,
     fontSize: 16,
-    fontWeight: '600'
-  }
+    fontWeight: '600',
+  },
 });

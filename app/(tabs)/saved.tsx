@@ -2,8 +2,8 @@ import { FlatList, StyleSheet, Text, View, TouchableOpacity } from 'react-native
 import React, { useState, useEffect } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Link, Stack } from 'expo-router';
-import Loading from '@/components/Loading';
-import { NewsItem } from '@/components/NewsList';
+import Loading from '../components/Loading'; // Updated to relative path
+import { NewsItem } from '../components/NewsList'; // Updated to relative path
 import axios from 'axios';
 import { useIsFocused } from '@react-navigation/native';
 
@@ -70,6 +70,6 @@ export default BookmarkPage;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    margin: 20
+    margin: 20,
   },
 });

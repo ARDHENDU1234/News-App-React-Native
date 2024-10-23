@@ -3,7 +3,7 @@ import React from 'react';
 import { Ionicons } from '@expo/vector-icons'; 
 import { Colors } from "@/constants/Colors"; // Ensure this path is correct
 
-type Props = {}
+type Props = {};
 
 const Header = (props: Props) => {
   return (
@@ -14,7 +14,7 @@ const Header = (props: Props) => {
           source={{ uri: 'https://xsgames.co/randomusers/avatar.php?g=male' }} 
           style={styles.userImg} 
         />
-        <View style={{ gap: 3 }}>
+        <View style={styles.textContainer}>
           <Text style={styles.welcomeTxt}>Welcome</Text>
           <Text style={styles.userName}>John Doe!</Text>
         </View>
@@ -40,12 +40,16 @@ const styles = StyleSheet.create({
   },
   userImg: {
     height: 50,
-    borderRadius: 30, 
+    width: 50, // Added width to maintain aspect ratio
+    borderRadius: 25, // Changed to half of width for a perfect circle
   },
   userInfo: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: 10,
+  },
+  textContainer: {
+    gap: 3,
   },
   welcomeTxt: {
     fontSize: 12,

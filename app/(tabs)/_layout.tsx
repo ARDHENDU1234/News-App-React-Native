@@ -1,6 +1,6 @@
 import React from 'react';
 import { Tabs } from 'expo-router';
-import { TabBar } from '@/components/TabBar'; // Ensure this path is correct
+import { TabBar } from '../../components/TabBar'; // Ensure this path is correct
 
 const TabLayout = () => {
   return (

@@ -2,7 +2,7 @@ import { StyleSheet, Text, View, Image, TouchableOpacity } from 'react-native';
 import React from 'react';
 import { NewsDataType } from '@/types';
 import { Colors } from '@/constants/Colors';
-import Loading from './Loading'; // Make sure to import the Loading component
+import Loading from './Loading';
 import { Link } from 'expo-router';
 
 type Props = {
@@ -13,14 +13,14 @@ const NewsList = ({ newsList }: Props) => {
   return (
     <View style={styles.container}>
       {newsList.length === 0 ? (
-        <Loading size={'large'} />
+        <Loading size="large" />
       ) : (
         newsList.map((item, index) => (
           <Link href={`/news/${item.article_id}`} asChild key={index}>
-            <TouchableOpacity>         
-              <NewsItem item={item}/>
-            </TouchableOpacity> 
-          </Link>  
+            <TouchableOpacity style={styles.touchableOpacity}>
+              <NewsItem item={item} />
+            </TouchableOpacity>
+          </Link>
         ))
       )}
     </View>
@@ -29,27 +29,21 @@ const NewsList = ({ newsList }: Props) => {
 
 export default NewsList;
 
-export const NewsItem = ({item}: {item: NewsDataType}) => {
-  return(
+const NewsItem = ({ item }: { item: NewsDataType }) => {
+  return (
     <View style={styles.itemContainer}>
-    <Image 
-      source={{ uri: item.image_url }} 
-      style={styles.itemImg} 
-    />
-    <View style={styles.itemInfo}>
-      <Text style={styles.itemCategory}>{item.category}</Text>
-      <Text style={styles.itemTitle}>{item.title}</Text>
-      <View style={styles.itemSourceInfo}>
-        <Image 
-          source={{ uri: item.source_icon }} 
-          style={styles.itemSourceImg} 
-        />
-        <Text style={styles.itemSourceName}>{item.source_name}</Text>
+      <Image source={{ uri: item.image_url }} style={styles.itemImg} />
+      <View style={styles.itemInfo}>
+        <Text style={styles.itemCategory}>{item.category}</Text>
+        <Text style={styles.itemTitle}>{item.title}</Text>
+        <View style={styles.itemSourceInfo}>
+          <Image source={{ uri: item.source_icon }} style={styles.itemSourceImg} />
+          <Text style={styles.itemSourceName}>{item.source_name}</Text>
+        </View>
       </View>
     </View>
-  </View>    
   );
-}
+};
 
 const styles = StyleSheet.create({
   container: {
@@ -60,8 +54,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     marginBottom: 20,
-    flex: 1,
-    gap: 10,
   },
   itemImg: {
     width: 90,
@@ -71,7 +63,6 @@ const styles = StyleSheet.create({
   },
   itemInfo: {
     flex: 1,
-    gap: 10,
     justifyContent: 'space-between',
   },
   itemCategory: {
@@ -86,8 +77,8 @@ const styles = StyleSheet.create({
   },
   itemSourceInfo: {
     flexDirection: 'row',
-    gap: 8,
     alignItems: 'center',
+    gap: 8,
   },
   itemSourceImg: {
     width: 20,
@@ -98,5 +89,8 @@ const styles = StyleSheet.create({
     fontSize: 10,
     fontWeight: '400',
     color: Colors.darkGrey,
+  },
+  touchableOpacity: {
+    flex: 1,
   },
 });
