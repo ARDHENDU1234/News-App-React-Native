@@ -1,12 +1,7 @@
 {
   "name": "expo-news-app-starter",
-  "version": "1.0.0",
-  "description": "A starter application for a news app built with Expo and React Native.",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/yourusername/expo-news-app-starter.git"
-  },
   "main": "expo-router/entry",
+  "version": "1.0.0",
   "scripts": {
     "start": "expo start",
     "reset-project": "node ./scripts/reset-project.js",
@@ -20,9 +15,7 @@
     "preset": "jest-expo"
   },
   "dependencies": {
-    "@expo/metro-runtime": "^3.2.3",
     "@expo/vector-icons": "^14.0.2",
-    "@react-native-async-storage/async-storage": "1.23.1",
     "@react-navigation/native": "^6.0.2",
     "axios": "^1.7.4",
     "expo": "~51.0.28",
@@ -30,7 +23,7 @@
     "expo-font": "~12.0.9",
     "expo-linear-gradient": "~13.0.2",
     "expo-linking": "~6.3.1",
-    "expo-router": "^3.5.23",
+    "expo-router": "~3.5.23",
     "expo-splash-screen": "~0.27.5",
     "expo-status-bar": "~1.12.1",
     "expo-system-ui": "~3.0.7",
@@ -38,25 +31,21 @@
     "moment": "^2.30.1",
     "react": "18.2.0",
     "react-dom": "18.2.0",
-    "react-native": "^0.74.5",
+    "react-native": "0.74.5",
     "react-native-gesture-handler": "~2.16.1",
     "react-native-reanimated": "~3.10.1",
     "react-native-safe-area-context": "4.10.5",
     "react-native-screens": "3.31.1",
-    "react-native-svg": "15.2.0",
-    "react-native-web": "~0.19.10"
+    "react-native-web": "~0.19.10",
+    "@react-native-async-storage/async-storage": "1.23.1"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",
     "@types/jest": "^29.5.12",
     "@types/react": "~18.2.45",
-    "@types/react-native": "^0.73.0",
-    "@types/react-test-renderer": "18.0.7",
+    "@types/react-test-renderer": "^18.0.7",
     "jest": "^29.2.1",
     "jest-expo": "~51.0.3",
-    "metro-config": "^0.81.0",
-    "metro-react-native-babel-preset": "^0.77.0",
-    "react-native-svg-transformer": "^1.5.0",
     "react-test-renderer": "18.2.0",
     "typescript": "~5.3.3"
   },
