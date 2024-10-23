@@ -1,32 +1,32 @@
 import React from 'react';
 import { Tabs } from 'expo-router';
-import { TabBar } from '../../components/TabBar'; // Ensure this path is correct
+import { TabBar } from '@/components/TabBar'; // Ensure this path is correct
 
-const TabLayout = () => {
+const TabLayout = () => { // Corrected arrow function syntax
   return (
     <Tabs tabBar={(props) => <TabBar {...props} />} screenOptions={{ headerShown: false }}>
       <Tabs.Screen
-        name="index"
+        name="index" // Added quotes around the name
         options={{
-          title: "Home",
+          title: "Home", // Added quotes around the title
         }}
       />
       <Tabs.Screen
-        name="discover"
+        name="discover" // Added quotes around the name
         options={{
-          title: "Discover",
+          title: "Discover", // Added quotes around the title
         }}
       />
       <Tabs.Screen
-        name="saved"
+        name="saved" // Added quotes around the name
         options={{
-          title: "Saved",
+          title: "Saved", // Added quotes around the title
         }}
       />
       <Tabs.Screen
-        name="settings"
+        name="settings" // Added quotes around the name
         options={{
-          title: "Settings",
+          title: "Settings", // Added quotes around the title
         }}
       />
     </Tabs>

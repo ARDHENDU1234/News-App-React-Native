@@ -1,20 +1,31 @@
-import { ActivityIndicator, ActivityIndicatorProps, StyleSheet, View } from 'react-native';
-import React from 'react';
+import { 
+  ActivityIndicator, 
+  ActivityIndicatorProps, 
+  StyleSheet, 
+  Text, 
+  View 
+} from 'react-native'
+import React from 'react'
 
-const Loading: React.FC<ActivityIndicatorProps> = (props) => {
+const Loading = (
+  props React.JSX.IntrinsicAttributes & 
+  React.JSX.IntrinsicClassAttributesActivityIndicator & 
+  ReadonlyActivityIndicatorProps
+) = {
   return (
-    <View style={styles.container}>
-      <ActivityIndicator {...props} />
-    </View>
+    View style={styles.container}
+      ActivityIndicator {...props} 
+    View
   );
 };
 
-export default Loading;
+
+export default Loading
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-});
+  container {
+      flex 1,
+      justifyContent 'center',
+      alignItems 'center',
+  }
+})

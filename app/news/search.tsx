@@ -1,163 +1,92 @@
-import { StyleSheet, Text, TouchableOpacity, View, Image } from 'react-native';
+import { StyleSheet, Text, View } from 'react-native';
 import React, { useEffect, useState } from 'react';
-import { router, Stack, useLocalSearchParams } from 'expo-router';
-import { Ionicons } from '@expo/vector-icons';
+import { Link, router, Stack, useLocalSearchParams } from 'expo-router';
+import { FlatList, TouchableOpacity } from 'react-native-gesture-handler';
+import { Ionicons } from '@expovector-icons';
+import Loading from '@componentsLoading';
+import { NewsItem } from '@componentsNewsList';
 import axios from 'axios';
-import Loading from '../components/Loading'; // Updated to relative path
-import { ScrollView } from 'react-native-gesture-handler';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import { Colors } from 'react-native/Libraries/NewAppScreen';
 
-type Props = {};
+type NewsDataType = {
+  article_id string;
+  title string;
+  description string;
+   other fields as per the news data structure
+};
 
-const NewsDetails = (props: Props) => {
-  const { id } = useLocalSearchParams<{ id: string }>();
-  const [news, setNews] = useState<any[]>([]); // Updated to any[] for flexibility
+const Page = () = {
+  const { query = '', category = '', country = '' } = useLocalSearchParams{
+    query string;
+    category string; 
+    country string;
+  }();
+
+  const [news, setNews] = useStateNewsDataType[]([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [bookmark, setBookmark] = useState(false);
 
-  useEffect(() => {
+  useEffect(() = {
     getNews();
   }, []);
 
-  useEffect(() => {
-    if (!isLoading) {
-      renderBookmark(news[0]?.article_id); // Added optional chaining
-    }
-  }, [isLoading]);
-
-  const getNews = async () => {
+  const getNews = async () = {
     try {
-      const URL = `https://newsdata.io/api/1/news?apikey=${process.env.EXPO_PUBLIC_API_KEY}&id=${id}`;
+      let categoryString = category  &category=${category}  '';
+      let countryString = country  &country=${country}  '';
+      let queryString = query  &query=${query}  '';
+
+      const URL = httpsnewsdata.ioapi1newsapikey=${process.env.EXPO_PUBLIC_API_KEY}&language=en&image=1&removeduplicate=1&size=10${categoryString}${countryString}${queryString};
       const response = await axios.get(URL);
 
       if (response && response.data) {
         setNews(response.data.results);
-        setIsLoading(false);
       }
-    } catch (err: any) {
-      console.log('Error Message: ', err.message);
+    } catch (err any) {
+      console.log('Error Message ', err.message);
+    } finally {
+      setIsLoading(false);
     }
-  };
-
-  const saveBookmark = async (newsId: string) => {
-    setBookmark(true);
-    const storedBookmarks = await AsyncStorage.getItem('bookmark');
-    const bookmarks = storedBookmarks ? JSON.parse(storedBookmarks) : [];
-
-    if (!bookmarks.includes(newsId)) {
-      bookmarks.push(newsId);
-      await AsyncStorage.setItem('bookmark', JSON.stringify(bookmarks));
-      alert('News Saved!');
-    }
-  };
-
-  const removeBookmark = async (newsId: string) => {
-    setBookmark(false);
-    const storedBookmarks = await AsyncStorage.getItem('bookmark');
-    const bookmarks = storedBookmarks ? JSON.parse(storedBookmarks) : [];
-
-    const updatedBookmarks = bookmarks.filter((id: string) => id !== newsId);
-    await AsyncStorage.setItem('bookmark', JSON.stringify(updatedBookmarks));
-    alert('News unsaved');
-  };
-
-  const renderBookmark = async (newsId: string) => {
-    const storedBookmarks = await AsyncStorage.getItem('bookmark');
-    const res = storedBookmarks ? JSON.parse(storedBookmarks) : [];
-    const data = res.includes(newsId);
-    setBookmark(data);
   };
 
   return (
-    <>
-      <Stack.Screen
+    
+      Stack.Screen
         options={{
-          headerLeft: () => (
-            <TouchableOpacity onPress={() => router.back()}>
-              <Ionicons name="arrow-back" size={22} />
-            </TouchableOpacity>
+          headerLeft () = (
+            TouchableOpacity onPress={() = router.back()}
+              Ionicons name=arrow-back size={24} 
+            TouchableOpacity
           ),
-          headerRight: () => (
-            <TouchableOpacity
-              onPress={() =>
-                bookmark
-                  ? removeBookmark(news[0]?.article_id)
-                  : saveBookmark(news[0]?.article_id)
-              }
-            >
-              <Ionicons
-                name={bookmark ? 'heart' : 'heart-outline'}
-                size={22}
-                color={bookmark ? 'red' : Colors.black}
-              />
-            </TouchableOpacity>
-          ),
-          title: '',
+          title Search,
         }}
-      />
-      {isLoading ? (
-        <Loading size="large" />
-      ) : (
-        <ScrollView contentContainerStyle={styles.contentContainer} style={styles.container}>
-          {news.length > 0 && (
-            <>
-              <Text style={styles.title}>{news[0].title}</Text>
-              <View style={styles.newsInfoWrapper}>
-                <Text style={styles.newsInfo}>
-                  {Moment(news[0].pubDate).format('MMMM DD, hh:mm a')}
-                </Text>
-                <Text style={styles.newsInfo}>{news[0].source_name}</Text>
-              </View>
-              <Image source={{ uri: news[0].image_url }} style={styles.newsImg} />
-              <Text style={styles.newsContent}>
-                {news[0].content || news[0].description}
-              </Text>
-            </>
-          )}
-        </ScrollView>
-      )}
-    </>
+      
+      View style={styles.container}
+        {isLoading  (
+          Loading size=large 
+        )  (
+          FlatList
+            data={news}
+            keyExtractor={(_, index) = list_item${index}}
+            showsVerticalScrollIndicator={false}
+            renderItem={({ item }) = (
+              Link href={news${item.article_id}} asChild
+                TouchableOpacity
+                  NewsItem item={item} 
+                TouchableOpacity
+              Link
+            )}
+          
+        )}
+      View
+    
   );
 };
 
-export default NewsDetails;
+export default Page;
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: Colors.white,
-  },
-  contentContainer: {
-    paddingHorizontal: 20,
-    paddingBottom: 30,
-  },
-  newsImg: {
-    width: '100%',
-    height: 300,
-    marginBottom: 20,
-    borderRadius: 10,
-  },
-  newsInfoWrapper: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginBottom: 20,
-  },
-  newsInfo: {
-    fontSize: 12,
-    color: Colors.darkGray,
-  },
-  title: {
-    fontSize: 16,
-    fontWeight: '600',
-    color: Colors.black,
-    marginVertical: 10,
-    letterSpacing: 0.6,
-  },
-  newsContent: {
-    fontSize: 14,
-    color: '#555',
-    letterSpacing: 0.8,
-    lineHeight: 22,
+  container {
+    flex 1,
+    marginHorizontal 20,
+    marginVertical 20,
   },
 });

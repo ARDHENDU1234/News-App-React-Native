@@ -1,98 +1,125 @@
-import { ImageBackground, StyleSheet, Text, TouchableOpacity, View } from "react-native";
-import React from "react";
-import { useRouter } from "expo-router";
-import Animated, { FadeInRight, FadeInDown } from "react-native-reanimated";
-import { StatusBar } from "expo-status-bar";
+import { Animated, StyleSheet, Text, useWindowDimensions, View, ViewToken } from 'react-native';
+import React, { useEffect, useRef, useState } from 'react';
+import { Colors } from '../constantsColors'; // Adjusted path
+import { FlatList } from 'react-native-gesture-handler';
+import { NewsDataType } from '@types'; // Adjusted path
+import SliderItem from '@components/SliderItem'; // Adjusted path
+import { scrollTo, useAnimatedRef, useDerivedValue, useSharedValue } from 'react-native-reanimated';
+import { useAnimatedScrollHandler } from 'react-native-reanimated';
+import Pagination from '@components/Pagination';
 
-// Define custom Colors object with the necessary color codes
-const Colors = {
-  tint: '#4CAF50', // Tint color for button background (green)
-  white: '#FFFFFF', // White color for text
-};
+type Props = {
+    newsList: Array<NewsDataType>
+}
 
-const Page = () => {
-  const router = useRouter();
+const BreakingNews = ({ newsList }: Props) => {
+    const [data, setData] = useState(newsList);
+    const [paginationIndex, setPaginationIndex] = useState(0);
+    const scrollX = useSharedValue(0);
+    const ref = useAnimatedRef<Animated.FlatList<any>>();
+    const [isAutoPlay, setIsAutoPlay] = useState(true);
+    const interval = useRef<NodeJS.Timeout>(); 
+    const offset = useSharedValue(0);
+    const { width } = useWindowDimensions();
 
-  return (
-    <View style={styles.container}>
-      <StatusBar style="light" />
-      <ImageBackground 
-          source={require('./assets/images/getting-started.jpg')} // Adjust the path accordingly
-          style={styles.backgroundImage} 
-          resizeMode="cover"
-      >
-        <View style={styles.wrapper}>
-          {/* Animated title using Animated.Text */}
-          <Animated.Text 
-            style={styles.title} 
-            entering={FadeInRight.delay(300).duration(1500)}
-          >
-            Stay Updated!
-          </Animated.Text>
+    const onScrollHandler = useAnimatedScrollHandler({
+        onScroll: (e) => {
+            scrollX.value = e.contentOffset.x;
+        },
+        onMomentumEnd: (e) => {
+            offset.value = e.contentOffset.x;
+        },
+    }); 
+    
+    useEffect(() => {
+        if (isAutoPlay) {
+            interval.current = setInterval(() => {
+                offset.value = offset.value + width;
+            }, 5000);
+        } else if (interval.current) {
+            clearInterval(interval.current);
+        }
+    
+        return () => {
+            if (interval.current) {
+                clearInterval(interval.current);
+            }
+        };
+    }, [isAutoPlay, offset, width]);
+    
+    useDerivedValue(() => {
+        if (ref.current) {
+            scrollTo(ref, offset.value, 0, true);
+        }
+    });
+
+    const onViewableItemsChanged = ({
+        viewableItems,
+    }: {
+        viewableItems: ViewToken[];
+    }) => {
+        if (
+            viewableItems[0].index !== undefined && 
+            viewableItems[0].index !== null
+        ) {
+            setPaginationIndex(viewableItems[0].index % newsList.length);
+        }
+    };
+      
+    const viewabilityConfig = {
+        itemVisiblePercentThreshold: 50,
+    };
+      
+    const viewabilityConfigCallbackPairs = useRef([
+        { viewabilityConfig, onViewableItemsChanged }
+    ]);
           
-          {/* Animated description text */}
-          <Animated.Text 
-            style={styles.description} 
-            entering={FadeInRight.delay(700).duration(500)}
-          >
-            Get breaking news and personalized updates directly to your feed.
-          </Animated.Text>
-
-          {/* Animated button container */}
-          <Animated.View entering={FadeInDown.delay(1200).duration(500)}>
-            <TouchableOpacity style={styles.btn} onPress={() => router.replace("/(tabs)")}>
-              <Text style={styles.btnText}>Get Started</Text>
-            </TouchableOpacity>
-          </Animated.View>
+    return (
+        <View style={styles.container}>
+            <Text style={styles.title}>Breaking News</Text>
+            <View style={styles.slideWrapper}>
+                <Animated.FlatList
+                    ref={ref}
+                    data={data}
+                    keyExtractor={(_, index) => `list_item_${index}`} 
+                    renderItem={({ item, index }) => (
+                        <SliderItem slideItem={item} index={index} scrollX={scrollX} />
+                    )}
+                    horizontal
+                    showsHorizontalScrollIndicator={false}
+                    pagingEnabled
+                    onScroll={onScrollHandler}
+                    scrollEventThrottle={16}
+                    onEndReachedThreshold={0.5}
+                    onEndReached={() => setData([...data, ...newsList])}
+                    viewabilityConfigCallbackPairs={viewabilityConfigCallbackPairs.current}   
+                    onScrollBeginDrag={() => {
+                        setIsAutoPlay(false);
+                    }}            
+                    onScrollEndDrag={() => {
+                        setIsAutoPlay(true);
+                    }}   
+                />
+                <Pagination items={newsList} scrollX={scrollX} paginationIndex={paginationIndex} />
+            </View>
         </View>
-      </ImageBackground>
-    </View>
-  );
-};
+    );
+}
 
-export default Page;
+export default BreakingNews;
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-  backgroundImage: {
-    flex: 1, // Use a style for the background image
-  },
-  wrapper: {
-    flex: 1,
-    justifyContent: 'flex-end',
-    paddingBottom: 50,
-    paddingHorizontal: 30,
-    gap: 10,
-    backgroundColor: 'rgba(0, 0, 0, 0.5)', // Transparent black overlay
-  },
-  title: {
-    color: Colors.white,
-    fontSize: 24,
-    fontWeight: '600',
-    letterSpacing: 1.5,
-    lineHeight: 36,
-    textAlign: 'center',
-  },
-  description: {
-    color: Colors.white,
-    fontSize: 16,
-    fontWeight: '500',
-    letterSpacing: 1.2,
-    lineHeight: 22,
-    textAlign: 'center',
-  },
-  btn: {
-    backgroundColor: Colors.tint,
-    paddingVertical: 15,
-    marginVertical: 20,
-    alignItems: 'center',
-    borderRadius: 10,
-  },
-  btnText: {
-    color: Colors.white,
-    fontSize: 16,
-    fontWeight: '700',
-  },
+    container: {
+        marginBottom: 10,
+    },
+    title: {
+        fontSize: 18,
+        fontWeight: '600',
+        color: Colors.black,
+        marginBottom: 10,
+        marginLeft: 20,
+    },
+    slideWrapper: {
+        justifyContent: 'center',
+    },
 });

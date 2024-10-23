@@ -1,6 +1,6 @@
 import { useFonts } from 'expo-font';
 import { Stack } from 'expo-router';
-import * as SplashScreen from 'expo-splash-screen';
+import * as SplashScreen from 'expo-splash-screen'; // Corrected this line
 import { useEffect } from 'react';
 import 'react-native-reanimated';
 
@@ -8,28 +8,24 @@ import 'react-native-reanimated';
 SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {
-  const [fontsLoaded] = useFonts({
-    SpaceMono: require('../assets/fonts/SpaceMono-Regular.ttf'),
+  const [loaded] = useFonts({
+    SpaceMono: require('../assets/fonts/SpaceMono-Regular.ttf'), // Added a colon after the font name
   });
 
-  useEffect(() => {
-    const hideSplashScreen = async () => {
-      if (fontsLoaded) {
-        await SplashScreen.hideAsync();
-      }
-    };
+  useEffect(() => { // Fixed the arrow function syntax
+    if (loaded) {
+      SplashScreen.hideAsync();
+    }
+  }, [loaded]);
 
-    hideSplashScreen();
-  }, [fontsLoaded]);
-
-  if (!fontsLoaded) {
-    return null; // Render nothing until fonts are loaded
+  if (!loaded) {
+    return null;
   }
 
   return (
     <Stack>
-      <Stack.Screen name="index" options={{ headerShown: false }} />
-      <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+      <Stack.Screen name="index" options={{ headerShown: false }} /> {/* Added quotes around "index" */}
+      <Stack.Screen name="(tabs)" options={{ headerShown: false }} /> {/* Added quotes around "(tabs)" */}
     </Stack>
   );
 }

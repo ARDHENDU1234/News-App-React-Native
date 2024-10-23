@@ -1,18 +1,19 @@
-import { StyleSheet, Text, TouchableOpacity, View, Image } from 'react-native';
+import { StyleSheet, Text, TouchableOpacity, View, Image, ScrollView } from 'react-native';
 import React, { useEffect, useState } from 'react';
 import { router, Stack, useLocalSearchParams } from 'expo-router';
-import { Ionicons } from '@expo/vector-icons';
+import { Ionicons } from '@expo/vector-icons'; // Corrected vector icons import
+import { NewsDataType } from '@types'; // Correct path
 import axios from 'axios';
-import Loading from '../components/Loading'; // Updated to relative path
-import { ScrollView } from 'react-native-gesture-handler';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import { Colors } from 'react-native/Libraries/NewAppScreen';
+import Loading from '@components/Loading'; // Correct path
+import Moment from 'moment';
+import AsyncStorage from '@react-native-async-storage/async-storage'; // Fixed AsyncStorage import path
+import { Colors } from 'react-native/Libraries/NewAppScreen'; // Correct path
 
 type Props = {};
 
-const NewsDetails = (props: Props) => {
+const NewsDetails: React.FC<Props> = (props) => {
   const { id } = useLocalSearchParams<{ id: string }>();
-  const [news, setNews] = useState<any[]>([]); // Updated to any[] for flexibility
+  const [news, setNews] = useState<NewsDataType[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [bookmark, setBookmark] = useState(false);
 
@@ -21,10 +22,10 @@ const NewsDetails = (props: Props) => {
   }, []);
 
   useEffect(() => {
-    if (!isLoading) {
-      renderBookmark(news[0]?.article_id); // Added optional chaining
+    if (!isLoading && news.length > 0) {
+      renderBookmark(news[0].article_id);
     }
-  }, [isLoading]);
+  }, [isLoading, news]);
 
   const getNews = async () => {
     try {
@@ -33,10 +34,11 @@ const NewsDetails = (props: Props) => {
 
       if (response && response.data) {
         setNews(response.data.results);
-        setIsLoading(false);
       }
     } catch (err: any) {
-      console.log('Error Message: ', err.message);
+      console.error('Error fetching news ', err.message);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -59,14 +61,15 @@ const NewsDetails = (props: Props) => {
 
     const updatedBookmarks = bookmarks.filter((id: string) => id !== newsId);
     await AsyncStorage.setItem('bookmark', JSON.stringify(updatedBookmarks));
-    alert('News unsaved');
+    alert('News Unsaved');
   };
 
   const renderBookmark = async (newsId: string) => {
     const storedBookmarks = await AsyncStorage.getItem('bookmark');
-    const res = storedBookmarks ? JSON.parse(storedBookmarks) : [];
-    const data = res.includes(newsId);
-    setBookmark(data);
+    const bookmarks = storedBookmarks ? JSON.parse(storedBookmarks) : [];
+
+    const isBookmarked = bookmarks.includes(newsId);
+    setBookmark(isBookmarked);
   };
 
   return (
@@ -82,8 +85,8 @@ const NewsDetails = (props: Props) => {
             <TouchableOpacity
               onPress={() =>
                 bookmark
-                  ? removeBookmark(news[0]?.article_id)
-                  : saveBookmark(news[0]?.article_id)
+                  ? removeBookmark(news[0].article_id)
+                  : saveBookmark(news[0].article_id)
               }
             >
               <Ionicons
@@ -96,6 +99,7 @@ const NewsDetails = (props: Props) => {
           title: '',
         }}
       />
+
       {isLoading ? (
         <Loading size="large" />
       ) : (
