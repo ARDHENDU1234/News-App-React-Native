@@ -6,7 +6,7 @@ import { NewsDataType } from '@/types';
 import axios from 'axios';
 import Loading from '@/components/Loading';
 import { ScrollView } from 'react-native-gesture-handler';
-import Moment from 'moment';
+import { Moment } from 'moment';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Colors } from 'react-native/Libraries/NewAppScreen';
 
@@ -23,8 +23,8 @@ const NewsDetails = (props: Props) => {
   }, []);
 
   useEffect(() => {
-    if( !isLoading ) {
-    renderBookmark(news[0].article_id);
+    if (!isLoading) {
+      renderBookmark(news[0].article_id);
     }
   }, [isLoading]);
 
@@ -64,15 +64,15 @@ const NewsDetails = (props: Props) => {
     alert('News unsaved');
   };
 
-  const renderBookmark = async(newsId: string) => {
-    await AsyncStorage.getItem("bookmark").then((token => {
+  const renderBookmark = async (newsId: string) => {
+    await AsyncStorage.getItem('bookmark').then((token) => {
       const res = JSON.parse(token);
-      if( res != null ) {
+      if (res != null) {
         let data = res.find((value: string) => value === newsId);
-        return data == null ? setBookmark(false) : setBookmark();
+        return data == null ? setBookmark(false) : setBookmark(true);
       }
     });
-  }
+  };
 
   return (
     <>
